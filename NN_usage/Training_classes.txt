@@ -1,0 +1,15 @@
+Clapping
+Clock_alarm
+Crackling_fire
+Door_knock
+Engine
+Footsteps
+Helicopter
+Keyboard_typing
+Pouring_water
+Rain
+Siren
+Snoring
+Thunderstorm
+Water_drops
+Wind
