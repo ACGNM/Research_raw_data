@@ -70,7 +70,7 @@
 
 % Load a waveform, calculate its gammatone spectrogram, then display:
 %[d,sr] = audioread(['../sound/wind/wind-',num2str(20),'.wav']);
-[d,sr] = audioread(['/Users/gongzhihao/Desktop/new_data/long_test.ogg']);
+[d,sr] = audioread(['/Users/gongzhihao/Desktop/code/sound/new_data/long_test.ogg']);
 d = d(:,1);
 tic; [D,F] = gammatonegram(d,sr); toc
 %Elapsed time is 0.140742 seconds.
@@ -126,6 +126,26 @@ set(gca,'YTickLabel',round(F(get(gca,'YTick'))));
 ylabel('freq / Hz');
 xlabel('time / 10 ms steps');
 title('Gammatonegram - accurate method')
+
+%% Blob
+BW = Binary_Wellner(D2);
+[block_matrix,blob_cell] = blob_separation(BW);
+
+STATS = regionprops(block_matrix,'ConvexHull','Centroid');
+%STATS = regionprops(L,'ConvexHull','Centroid');
+
+a = length(STATS);
+
+figure();
+imshow(BW);
+axis on;
+hold on
+for i = 1:a
+    Draw_polygon(STATS(i).ConvexHull(:,1),STATS(i).ConvexHull(:,2));
+    %plot(STATS(i).Centroid(1),STATS(i).Centroid(2),'.','markersize',20);
+end
+hold off
+
 
 %% Validation
 % We can check the frequency responses of the filterbank 
