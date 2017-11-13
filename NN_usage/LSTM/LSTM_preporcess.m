@@ -1,88 +1,40 @@
-[y1,fs] = audioread(['/Users/gongzhihao/Desktop/code/NN_usage/sound_data/Pouring_water/3-161500-A.ogg']);
-y1 = y1(:,1);
+%% path setting
+Source_Path = '/Users/gongzhihao/Desktop/code/NN_usage/LSTM';
+Sound_data_path = '/Users/gongzhihao/Desktop/code/NN_usage/sound_data';
 
-N = length(y1);
-win = 256;
-window = rectwin(win);
-noverlap = 128;
-nfft = 1024;
-time = double(length(y1)/fs);
+Training_classes = textread([Source_Path,'/Training_classes.txt'],'%s');
+[class_num,~] = size(Training_classes);
 
-%figure();
-[s,f,t,Pxx,fcorr,tcorr] = spectrogram(y1,window,noverlap,nfft,fs,'yaxis');
-logPxx = 10*log10(abs(Pxx)+eps);
-abs_Pxx = abs(s);
+%% variable setting 
+selector = [1,0,0,0,0];
+labels = [];
+sequences = {};
 
-%imagesc(logPxx);
-
-result = Binary_Wellner(logPxx);
-result = bwareaopen(result,10);
-[X,Y] = size(result);
-
-time_step = 170; %0.2s
-fre_step = 50; %2150Hz
-iter_time = floor(Y/time_step);
-iter_fre = floor(X/fre_step);
-
-%% sample
-% BW = Binary_Wellner(D2);
-% [block_matrix,blob_cell] = blob_separation(BW);
-% 
-% STATS = regionprops(block_matrix,'ConvexHull','Centroid');
-% %STATS = regionprops(L,'ConvexHull','Centroid');
-% 
-% a = length(STATS);
-% 
-% figure();
-% imshow(BW);
-% axis on;
-% hold on
-% for i = 1:a
-%     Draw_polygon(STATS(i).ConvexHull(:,1),STATS(i).ConvexHull(:,2));
-%     %plot(STATS(i).Centroid(1),STATS(i).Centroid(2),'.','markersize',20);
-% end
-% hold off
-
-%% extract feature
-block_set = {};
-count = 1;
-for iter_t = 1:iter_time
-    for iter_f = 1:iter_fre
-        [block_matrix,blob_cell] = blob_separation(result(fre_step*(iter_f-1)+1:fre_step*iter_f,...
-            time_step*(iter_t-1)+1:time_step*iter_t));
-        block_set{count} = block_matrix;
-        count = count + 1;
+%% take sound data
+for i=1:class_num
+    fileFolder=fullfile([Sound_data_path, '/', Training_classes{i}]);
+    dirOutput=dir(fullfile(fileFolder,'*.ogg'));
+    file_names = {dirOutput.name}';
+    
+    [file_num,~] = size(file_names);
+    label = categorical(repmat({num2str(i)},[file_num,1]));
+    labels = [labels; label];
+    squence = cell(file_num,1);
+    
+    for j=1:file_num
+        [signal,sr] = audioread([Sound_data_path, '/', Training_classes{i}, '/', file_names{j}]);
+        signal = signal(:,1);
+        % compute features
+        feature_seq = feature_extraction_for_LSTM(selector,signal,sr);
+        squence(j,1) = {feature_seq};
     end
+    
+    sequences = [sequences; squence];
+    display([Training_classes{i},' done']); 
 end
 
-time_positions = time_step+1:time_step:time_step*iter_time;
-fre_positions = fre_step+1:fre_step:fre_step*iter_fre;
-time_x_location = repmat(time_positions,[2 1]);
-time_y_location = repmat([0;513],[1 iter_time-1]);
-fre_x_location = repmat(fre_positions,[2 1]);
-fre_y_location = repmat([0;1722],[1 iter_fre-1]);
-                
-figure();
-imshow(result);
-hold on
-line(time_x_location,time_y_location, ...
-        'Color','r', ...
-        'LineStyle','--');
-hold on
-line(fre_y_location,fre_x_location, ...
-        'Color','r', ...
-        'LineStyle','--');
-STATS = regionprops(block_set{14},'ConvexHull','Centroid');
-%STATS = regionprops(L,'ConvexHull','Centroid');
+save([Source_Path,'/cv_data.mat'],'labels','sequences');
 
-a = length(STATS);
 
-figure();
-imshow(result(fre_step*3+1:fre_step*4,time_step+1:time_step*2));
-axis on;
-hold on
-for i = 1:a
-    Draw_polygon(STATS(i).ConvexHull(:,1),STATS(i).ConvexHull(:,2));
-    %plot(STATS(i).Centroid(1),STATS(i).Centroid(2),'.','markersize',20);
-end
-hold off
+
+    

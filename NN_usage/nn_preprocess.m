@@ -57,5 +57,3 @@ for i=1:class_num
     end
     display([Training_classes{i},' done']);
 end
-
-

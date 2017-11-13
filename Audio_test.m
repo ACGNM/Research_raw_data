@@ -11,9 +11,9 @@ nfft = 1024;
 time = double(length(y1)/fs);
 
 %figure();
-[s,f,t,Pxx,fcorr,tcorr] = spectrogram(y1,window,noverlap,nfft,fs,'yaxis');
+Pxx = spectrogram(y1,window,noverlap,nfft,fs,'yaxis');
 logPxx = 10*log10(abs(Pxx)+eps);
-abs_Pxx = abs(s);
+%abs_Pxx = abs(s);
 
 imagesc(logPxx);
 
