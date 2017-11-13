@@ -68,4 +68,5 @@ miniBatchSize = 30;
 YPred = classify(net,testing_X, ...
     'MiniBatchSize',miniBatchSize);
 
+% compute accuracy
 acc = sum(YPred == testing_Y)./numel(testing_Y)
