@@ -8,4 +8,4 @@
 
 * The sound samples are in the ../NN_usage/sound_data
 
-* color_net.mat is the pre-trained CNN net work using those sound data and the code in the ../NN_usege
+* color_net.mat is the pre-trained CNN network using those sound data and the code in the ../NN_usege
