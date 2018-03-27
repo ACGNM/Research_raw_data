@@ -18,7 +18,40 @@
 
 ## Results
 
-* In the training process, **15 kinds of sounds** and **40 samples** in each category were trained for the Neural Network. The training process is as following:
+* In the training process, **15 kinds of sounds** and **40 samples** in each category were trained for the Neural Network. 
+
+>
+Clapping
+>
+Clock_alarm
+>
+Crackling_fire
+>
+Door_knock
+>
+Engine
+>
+Footsteps
+>
+Helicopter
+>
+Keyboard_typing
+>
+Pouring_water
+>
+Rain
+>
+Siren
+>
+Snoring
+>
+Thunderstorm
+>
+Water_drops
+>
+Wind
+
+* The training process is as following:
 
 ![1](1.jpg)
 
