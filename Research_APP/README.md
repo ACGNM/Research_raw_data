@@ -20,11 +20,11 @@
 
 * In the training process, **15 kinds of sounds** and **40 samples** in each category were trained for the Neural Network. The training process is as following:
 
-![1](media/1.jpg)
+![1](1.jpg)
 
 * The wiew of application is as following:
 
-![2](media/2.jpg)
+![2](2.jpg)
 
 * Push **`Begin Recording`** button to use the computer's microphone to record some kinds of environmental sounds.
 
